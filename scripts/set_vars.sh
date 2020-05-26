@@ -14,7 +14,7 @@ AWS_REGION=$($DIR/read_cfg.sh $HOME/.aws/config "profile ${AWS_PROFILE}" region)
 
 
 
-if [ "${AWS_ACCOUNT}" == "root" ];then
+if [ "${ENV}" == "root" ];then
 	AWS_ACCOUNTS=$(aws organizations list-accounts \
 				--query 'Accounts[].[Name,Id]' \
 				| jq -c '.[]')
