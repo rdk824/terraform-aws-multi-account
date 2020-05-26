@@ -1,12 +1,13 @@
-# SHELL=/bin/bash
+.PHONY: $(shell grep --no-filename -E '^[a-zA-Z0-9_-]+:' $(MAKEFILE_LIST) | sed 's/://')
 
+SHELL=/bin/bash
 
 # Define paths variables
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SCRIPTS := $(ROOT_DIR)scripts
 
 # AWS Environments
-AWS_ENV_DIR := $(ROOT_DIR)environments
+RESOURCE_DIR := $(ROOT_DIR)environments/$(RESOURCE)
 
 # Terraform files
 TF_CLI_CONFIGURATION := $(HOME)/.terraformrc
@@ -25,12 +26,12 @@ TF_DESTROY := terraform destroy -force -auto-approve
 export
 
 
-setup_env: check_aws_profile
+setup_env: check_aws_profile check_resource_dir
 	@if [ ! -d $(TF_PLUGIN_CACHE_DIR) ]; then \
 		mkdir -p $(TF_PLUGIN_CACHE_DIR); \
 	fi
 	@echo 'plugin_cache_dir = "$(TF_PLUGIN_CACHE_DIR)"' > $(TF_CLI_CONFIGURATION)
-	@cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	@cd $(RESOURCE_DIR); \
 	$(SCRIPTS)/set_vars.sh
 
 check_aws_profile:
@@ -39,8 +40,14 @@ check_aws_profile:
 	  exit 1 ; \
 	fi
 
+check_resource_dir:
+	@if [ ! -d $(RESOURCE_DIR) ] >/dev/null 2>&1 ; then \
+	  printf "\n\033[31mERROR:  %s not found! Create the folder before proceeding!\n\n" ${RESOURCE_DIR}; \
+	  exit 1 ; \
+	fi
+
 tf_init: setup_env tf_remote_state
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	cd $(RESOURCE_DIR); \
 	rm -rf .terraform; \
 	$(TF_INIT); \
 	terraform workspace select default; \
@@ -48,24 +55,20 @@ tf_init: setup_env tf_remote_state
 	$(TF_GET)
 
 tf_plan: tf_init
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	cd $(RESOURCE_DIR); \
 	$(TF_PLAN)
 
 tf_apply: tf_plan
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	cd $(RESOURCE_DIR); \
 	$(TF_APPLY)
 
 tf_remote_state:
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	cd $(RESOURCE_DIR); \
 	$(SCRIPTS)/tf_remote_state.sh
 	
 tf_refresh: tf_init
 	$(TF_REFRESH)
 
 tf_destroy: tf_init
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	cd $(RESOURCE_DIR); \
 	$(TF_DESTROY)
-
-
-
-.PHONY: setup_env check_aws_profile tf_apply tf_plan tf_init tf_remote_state tf_refresh tf_plan tf_destroy
