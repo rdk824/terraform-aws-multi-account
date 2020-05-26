@@ -1,7 +1,7 @@
 
 
 module "flow_logs" {
-  source               = "../../modules/vpc-flow-logs"
+  source               = "git::https://github.com/rdansou/terraform-aws-vpc-flow-logs?ref=master"
 
   enable_flow_logs     = lookup(var.network_params, "enable_flow_logs", var.enable_flow_logs) ? var.create_vpc : false
   vpc_id               = module.vpc.vpc_id
