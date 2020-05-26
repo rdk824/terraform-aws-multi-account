@@ -3,6 +3,7 @@
 # Variables
 AWS_PROFILE=${AWS_PROFILE:-default}
 ENV=${ENV:-root}
+RESOURCE=${1:-$RESOURCE}
 
 AWS_REGION=$(${SCRIPTS}/read_cfg.sh $HOME/.aws/config "profile ${AWS_PROFILE}" region)
 BUCKET_NAME=tf-remote-state-${ENV}
