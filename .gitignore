@@ -1,0 +1,16 @@
+
+*.tfvars
+*.tfstate*
+.terraform
+terraform.tf
+**/environments/**/variables.tf
+
+
+**/inspec.lock
+*.log
+*.gem
+.kitchen
+.kitchen.local.yml
+Gemfile.lock
+backup*
+.DS*
