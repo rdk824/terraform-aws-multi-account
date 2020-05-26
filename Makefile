@@ -25,15 +25,12 @@ TF_DESTROY := terraform destroy -force -auto-approve
 export
 
 
-
-init: setup_env
+setup_env: check_aws_profile
 	@if [ ! -d $(TF_PLUGIN_CACHE_DIR) ]; then \
 		mkdir -p $(TF_PLUGIN_CACHE_DIR); \
 	fi
 	@echo 'plugin_cache_dir = "$(TF_PLUGIN_CACHE_DIR)"' > $(TF_CLI_CONFIGURATION)
-
-setup_env: check_aws_profile
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
+	@cd $(AWS_ENV_DIR)/$(RESOURCE); \
 	$(SCRIPTS)/set_vars.sh
 
 check_aws_profile:
@@ -42,12 +39,13 @@ check_aws_profile:
 	  exit 1 ; \
 	fi
 
-
-
-
-tf_init: init tf_workspace tf_remote_state
+tf_init: setup_env tf_remote_state
 	cd $(AWS_ENV_DIR)/$(RESOURCE); \
-	$(TF_INIT); $(TF_GET);
+	rm -rf .terraform; \
+	$(TF_INIT); \
+	terraform workspace select default; \
+	terraform workspace select $(ENV) || terraform workspace new $(ENV); \
+	$(TF_GET)
 
 tf_plan: tf_init
 	cd $(AWS_ENV_DIR)/$(RESOURCE); \
@@ -60,13 +58,6 @@ tf_apply: tf_plan
 tf_remote_state:
 	cd $(AWS_ENV_DIR)/$(RESOURCE); \
 	$(SCRIPTS)/tf_remote_state.sh
-
-# https://github.com/hashicorp/terraform/issues/21393
-tf_workspace:
-	cd $(AWS_ENV_DIR)/$(RESOURCE); \
-	terraform workspace select default; \
-	terraform workspace select $(ENV) || terraform workspace new $(ENV); \
-	$(TF_INIT);
 	
 tf_refresh: tf_init
 	$(TF_REFRESH)
@@ -77,4 +68,4 @@ tf_destroy: tf_init
 
 
 
-.PHONY: init setup_env check_aws_profile tf_apply tf_plan tf_init tf_remote_state tf_refresh tf_plan tf_destroy
+.PHONY: setup_env check_aws_profile tf_apply tf_plan tf_init tf_remote_state tf_refresh tf_plan tf_destroy
