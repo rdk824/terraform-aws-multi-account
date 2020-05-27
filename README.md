@@ -50,7 +50,7 @@ These accounts name can be modified.
 
 ### Configure awscli
 
-Use `aws configure` to set up credentials manually edit:
+Use `aws configure` to set up credentials or manually edit:
 
 - *~/.aws/credentials*
 ```shell
