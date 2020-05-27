@@ -46,7 +46,7 @@ The code is configured by default to deploy in:
 - **development**: Development environment       
 - **production**: Production environment
 
-These accounts names can be modified.
+These accounts name can be modified.
 
 ### Configure awscli
 
