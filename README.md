@@ -3,18 +3,9 @@
 Terraform code which automates the deployment of AWS resources in a multi-account environment.
 
 
----
+## Goals
 
-## Table of Contents
-
-- [Project Structure](#project-structure)
-- [Goals](#goals)
-- [Usage](#usage)
-- [Makefile targets](#makefile-targets)
-- [Resources](#resources)
-- [License](#license)
-
----
+The goal of this project is to make it easy to deploy new AWS resources in AWS Organizations sub-accounts using the same Terraform code while keeping the code DRY. 
 
 ## Project Structure
 
@@ -43,10 +34,6 @@ Terraform code which automates the deployment of AWS resources in a multi-accoun
 │   ├── set_vars.sh
 │   └── tf_remote_state.sh
 ```
-
-## Goals
-
-The goal of this project is to make it easy to deploy new AWS resources in AWS Organizations sub-accounts using the same Terraform code while keeping the code DRY. 
 
 ## Usage
 
@@ -87,7 +74,7 @@ output = json
 The automation scripts read `~/.aws/config` to get the *region* and *output* format.
 
 ### AWS Profile
-You need to modify `AWS_PROFILE` [Makefile](https://github.com/rdansou/terraform-aws-multi-account/blob/master/Makefile) if you're using a profile name different from `default`.
+You need to add `AWS_PROFILE=profile_name` in [Makefile](https://github.com/rdansou/terraform-aws-multi-account/blob/master/Makefile) if you're using a profile name different from `default`.
 
 ### How to deploy a resource?
 Let's assumes that you want to deploy [Network resources](https://github.com/rdansou/terraform-aws-multi-account/tree/master/resources/networking) in production.
@@ -109,10 +96,10 @@ This command will:
 
 | Target | Description |
 |--------|-----------|
-| setup_env | Set up Terraform plugins cache dir and create environment specific Terraform variables inside the resources folder |
+| setup_env | Sets up Terraform plugins cache dir and creates environment specific Terraform variables inside the resources folder |
 | check_aws_profile | Checks if the AWS profile configuration has been set in *~/.aws/config*. |
 | check_resource_dir | Checks if a folder for the resources being deployed exists |
-| tf_remote_state | Create an S3 bucket and a DynamoDB table for Terraform remote state and creates a *terraform.tf* file that contains Terraform remote state configuration for the environment |
+| tf_remote_state | Creates an S3 bucket and a DynamoDB table for Terraform remote state and creates a *terraform.tf* file that contains Terraform remote state configuration for the environment |
 | tf_init | Creates and/or select Terraform workspace after calling the setting up the environment using the targets above, then runs `terraform init` |
 | tf_plan | Runs `terraform plan` after running `tf_init` |
 | tf_apply | Runs `terraform apply` after running `tf_plan` |
