@@ -79,7 +79,7 @@ You need to add `AWS_PROFILE := profile_name` in [Makefile](https://github.com/r
 ### How to deploy a resource?
 Let's assumes that you want to deploy [Network resources](https://github.com/rdansou/terraform-aws-multi-account/tree/master/resources/networking) in production.
 
-1. Provide variables in the [production networking terraform file](https://github.com/rdansou/terraform-aws-multi-account/blob/master/environments/networking/production.tf)
+1. Provide terraform variables in [production networking file](https://github.com/rdansou/terraform-aws-multi-account/blob/master/environments/networking/production.tf)
 2. Then from the root of the project run:
 ```bash
 make tf_apply ENV="production" RESOURCE="networking"
