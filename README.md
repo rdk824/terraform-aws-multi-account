@@ -74,7 +74,7 @@ output = json
 The automation scripts read `~/.aws/config` to get the *region* and *output* format.
 
 ### AWS Profile
-You need to add `AWS_PROFILE=profile_name` in [Makefile](https://github.com/rdansou/terraform-aws-multi-account/blob/master/Makefile) if you're using a profile name different from `default`.
+You need to add `AWS_PROFILE := profile_name` in [Makefile](https://github.com/rdansou/terraform-aws-multi-account/blob/master/Makefile) or run `export AWS_PROFILE=profile_name` if you're using a profile name different from `default`.
 
 ### How to deploy a resource?
 Let's assumes that you want to deploy [Network resources](https://github.com/rdansou/terraform-aws-multi-account/tree/master/resources/networking) in production.
