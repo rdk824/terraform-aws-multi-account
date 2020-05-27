@@ -37,11 +37,8 @@ The goal of this project is to make it easy to deploy new AWS resources in AWS O
 
 ## Usage
 
-### Setup
 
-- Enable AWS Organizations and sub accounts for different environments (eg.: dev, uat, prod). Thi
-
-### Accounts and Sub accounts
+### Root account and member accounts
 
 The code is configured by default to deploy in:
 
@@ -51,7 +48,7 @@ The code is configured by default to deploy in:
 
 These accounts names can be modified.
 
-### Configure awscli credentials
+### Configure awscli
 
 Use `aws configure` to set up credentials manually edit:
 
